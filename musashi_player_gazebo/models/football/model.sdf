@@ -64,6 +64,7 @@
             </contact>
          </sensor>
       </link>
-      <plugin name="ball_gazebo" filename="libball_gazebo.so" />
+      <!--later,I will put with pugin -->>
+      <!-- <plugin name="ball_gazebo" filename="libball_gazebo.so" /> -->
    </model>
 </sdf>

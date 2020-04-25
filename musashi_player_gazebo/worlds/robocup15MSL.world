@@ -125,5 +125,13 @@
       <static>true</static>
   </include>
 
+  <!-- RoboCup 2015 MSL Ball -->
+  <include>
+      <pose>1 0 1 0 0 0 </pose>
+      <uri>model://football</uri>
+      <name>football</name>
+      <static>false</static>
+  </include>
+
 </world>
 </sdf>

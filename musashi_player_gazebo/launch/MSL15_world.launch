@@ -3,8 +3,10 @@
   <env name="GAZEBO_MODEL_PATH" value="$(find musashi_player_gazebo)/models:$(optenv GAZEBO_MODEL_PATH)" />
   <env name="GAZEBO_RESOURCE_PATH" value="$(find musashi_player_gazebo):$(optenv GAZEBO_RESOURCE_PATH)"/>
 
+  <!-- Here-->
   <arg name="model" default="$(find musashi_player_description)/robots/musashi_player.urdf.xacro"/>
   <param name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+   <!-- Here-->
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find musashi_player_gazebo)/worlds/robocup15MSL.world"/>
@@ -14,5 +16,8 @@
     <arg name="gui" value="true"/>
   </include>
 
+ <!-- Here-->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model musashi_player -param robot_description"/>
+ <!-- Here-->
+
 </launch>
