@@ -3,12 +3,43 @@
 
 <xacro:include filename="$(find musashi_player_description)/urdf/base/base.urdf.xacro"/>
 
-  <!-- Base -->
+  <!-- base -->
+  <!-- <link name="base_footprint"/>
+  <xacro:base parent="base_footprint"> -->
+	<!-- <origin xyz="0 0 0.028"/> -->
+	<!-- <origin xyz="0 0 0.028"/>
+  </xacro:base> -->
+  
+  <!-- base_footprint Definition -->
   <link name="base_footprint"/>
-  <xacro:base parent="base_footprint">
-	<origin xyz="0 0 0.028"/>
-  </xacro:base>
+  
+  <joint name="base_joint" type="fixed">
+  	<origin xyz="0 0 0.03" rpy="0 0 0"/>
+		<parent link="base_footprint"/>
+		<child link = "base_link"/>
+  </joint>
 
+	<link name="base_link">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<inertial>
+			<origin xyz="0 0 0"/>
+			<mass value="32"/>
+			<inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="2.86" />
+		</inertial>
+		<visual>
+			<geometry>
+				<mesh filename="package://musashi_player_description/meshes/STL/base/musashi_player_2020_4_27.stl"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<geometry>
+				<mesh filename="package://musashi_player_description/meshes/STL/base/musashi_player_2020_4_27.stl"/>
+			</geometry>
+		</collision>
+	</link>
+
+  <!-- gazebo -->
   <gazebo>
     <plugin name="player_controller" filename="libgazebo_ros_planar_move.so">
       <commandTopic>cmd_vel</commandTopic>
@@ -18,5 +49,7 @@
       <robotBaseFrame>base_footprint</robotBaseFrame>
     </plugin>
   </gazebo>
+	<!-- end base -->
+
 
 </robot>

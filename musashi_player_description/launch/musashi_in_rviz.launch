@@ -1,0 +1,13 @@
+<launch>
+
+  <arg name="model" default="$(find musashi_player_description)/robots/musashi_player.urdf.xacro"/>
+  <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)"/>
+
+  <!-- nodes -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  
+  <!-- rviz -->
+  <node name="rviz_robo_description" pkg="rviz" type="rviz" args="-d $(find musashi_player_description)/rviz/setting.rviz" />
+
+</launch>

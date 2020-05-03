@@ -8,7 +8,6 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    cmake_modules
     roscpp
     rospy
     std_msgs
@@ -140,24 +139,28 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/musashi_player_ros_node.cpp)
-add_executable(test_node src/test_node.cpp)
-add_executable(test_sub_model_states src/test_sub_model_states.cpp)
-
+#add_executable(test_node src/test_node.cpp)
+#add_executable(test_sub_model_states src/test_sub_model_states.cpp)
 
 file(GLOB src
+  ${PROJECT_SOURCE_DIR}/src/Data/*.cpp
+  ${PROJECT_SOURCE_DIR}/src/Data/*.h
   ${PROJECT_SOURCE_DIR}/src/Behavior/*.cpp
-  # ${PROJECT_SOURCE_DIR}/src/Behavior/*.h
+  ${PROJECT_SOURCE_DIR}/src/Behavior/*.h
   ${PROJECT_SOURCE_DIR}/src/Behavior/*/*.cpp
-  # ${PROJECT_SOURCE_DIR}/src/Behavior/*/*.h
+  ${PROJECT_SOURCE_DIR}/src/Behavior/*/*.h
   ${PROJECT_SOURCE_DIR}/src/Behavior/*/*/*.cpp
-  # ${PROJECT_SOURCE_DIR}/src/Behavior/*/*/*.h
+  ${PROJECT_SOURCE_DIR}/src/Behavior/*/*/*.h
 )
 
 add_executable(behavior_node
-  src/behavior_node.cpp
-  # ./src/Data/Data.h
-  ./src/Data/Data.cpp
+  ./src/behavior_node.cpp
   ${src}
+)
+
+add_executable(test_dwa
+  ./src/test_DWA.cpp
+  ./src/Behavior/MotionControl/DynamicWindowApproach.h
 )
 
 ## Rename C++ executable without prefix
@@ -174,18 +177,22 @@ add_executable(behavior_node
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(test_node
-  ${catkin_LIBRARIES}
-)
+#target_link_libraries(test_node
+#  ${catkin_LIBRARIES}
+#)
 
-target_link_libraries(test_sub_model_states
-  ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARY_DIRS}
-)
+#target_link_libraries(test_sub_model_states
+#  ${catkin_LIBRARIES}
+#  ${GAZEBO_LIBRARY_DIRS}
+#)
 
 target_link_libraries(behavior_node
   ${catkin_LIBRARIES}
   ${GAZEBO_LIBRARY_DIRS}
+)
+
+target_link_libraries(test_dwa
+  ${catkin_LIBRARIES}
 )
 
 #############
