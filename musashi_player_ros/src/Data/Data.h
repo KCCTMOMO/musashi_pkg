@@ -61,6 +61,9 @@ public:
 
   Pose_t Xin; // target pose (x, y, theta)
   Velo_t Uin; // control input (vx, vy, omega)
+
+  //for Dynamic Window logging
+  std::vector<Velo_t> Uarray;
 };
 
 namespace Color {

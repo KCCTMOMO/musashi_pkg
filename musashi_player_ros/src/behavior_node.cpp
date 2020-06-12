@@ -4,6 +4,7 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <tf/transform_broadcaster.h>
 
 #include "Behavior/Behavior.h"
@@ -30,6 +31,7 @@ int main(int argc, char **argv) {
       nh.subscribe("coachbox/command", 3, coachbox_callback);
 
   ros::Publisher pub_cmd = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 10);
+  ros::Publisher pub_dw = nh.advertise<std_msgs::Float32MultiArray>("/dw", 10);
 
 #ifdef SIMULATION
   ros::Subscriber sub =
@@ -54,6 +56,14 @@ int main(int argc, char **argv) {
     msg.angular.z = data->Uin.omega;
 
     pub_cmd.publish(msg);
+
+
+    // Publish dynamic window array
+    std_msgs::Float32MultiArray dw_msgs;
+    for(int i = 0; i < data->Uarray.size(); i++){
+      dw_msgs.data.push_back(data->Uarray[i].x);
+    }
+    pub_dw.publish(dw_msgs);
 
     ros::spinOnce();
     loop_rate.sleep();

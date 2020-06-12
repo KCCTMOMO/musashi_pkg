@@ -6,9 +6,9 @@ Positioning::Positioning() {
   // make keys
   map2position = {
       /*
-      * regist for My setplay positions
-      *
-      */
+       * regist for My setplay positions
+       *
+       */
       {{Action::SetPlay::MyKickOff, Role::Alpha},
        Point{SetPlayPositions::My::KickOff::Alpha_x,
              SetPlayPositions::My::KickOff::Alpha_y}},
@@ -75,9 +75,9 @@ Positioning::Positioning() {
              SetPlayPositions::My::CornerKick::Delta_y}},
 
       /*
-      * regist for Opp setplay positions
-      *
-      */
+       * regist for Opp setplay positions
+       *
+       */
       {{Action::SetPlay::OppKickOff, Role::Alpha},
        Point{SetPlayPositions::Opp::KickOff::Alpha_x,
              SetPlayPositions::Opp::KickOff::Alpha_y}},
@@ -155,7 +155,6 @@ int Positioning::_Enter(Data *data) {
 }
 
 int Positioning::_Process(Data *data) {
-
   double elapsed = data->T - t_start;
 
   if (elapsed > (double)SETPLAY_TIME_LIMIT) {
@@ -170,6 +169,13 @@ int Positioning::_Process(Data *data) {
   key.second = data->role;
   target_point = map2position.at(key);
 
+  // by force
+  target_point.x = 2.0;
+  target_point.y = 0.0;
+
+  //まずはいち
+  //そして方向??
+
   // move to position (x,y)  by DWA algorithms
   DWA::Velo _velo;
   _velo.liner = data->X.velo.x;
@@ -178,15 +184,15 @@ int Positioning::_Process(Data *data) {
   DWA::Config _cfg;
   _cfg.max_v = 3.5;
   _cfg.min_v = 0.0;
-  _cfg.max_w = 2.0*M_PI;
+  _cfg.max_w = 2.0 * M_PI;
   _cfg.max_acc = 30.0;
-  _cfg.max_dw = 4.0*M_PI;
+  _cfg.max_dw = 4.0 * M_PI;
   _cfg.v_reso = 0.01;
-  _cfg.w_reso = 0.1*M_PI/180.0;
+  _cfg.w_reso = 0.1 * M_PI / 180.0;
   _cfg.v_sample_num = 20;
   _cfg.w_sample_num = 20;
   _cfg.dt = 0.01;
-  _cfg.T = 0.1;
+  _cfg.T = 0.05;
   _cfg.weight_v = 0.8;
   _cfg.weight_h = 1.0;
   _cfg.weight_c = 0.3;
@@ -198,6 +204,19 @@ int Positioning::_Process(Data *data) {
 
   DWA::PointSet obs;
   obs.points.clear();
+
+  data->Uarray.clear();
+  DWA::DynamicWindow dw;
+  createDynamicWindow(_velo, _cfg, &dw);
+  for (int vi = 0; vi < dw.possibleV.size(); vi++) {
+    for (int wi = 0; wi < dw.possibleW.size(); wi++) {
+      Velo_t tmp;
+      tmp.x = dw.possibleV[vi];
+      tmp.y = 0;
+      tmp.omega = dw.possibleW[wi];
+      data->Uarray.push_back(tmp);
+    }
+  }
 
   DWA::Velo velo = DWA::planning(_pose, _velo, _point, obs, _cfg);
 
